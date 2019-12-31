@@ -37,10 +37,10 @@ public class Profile implements Serializable {
     private String password;
     private String language;
     private String timeZone;
-    
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt-BR", timezone = "Brazil/East")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate disabled;    
+
+    @ElementCollection
+    @CollectionTable(name ="disabled")
+    private List<String> disabled = new ArrayList<String>();
     
     @ElementCollection
     @CollectionTable(name ="password_reset_verif")
