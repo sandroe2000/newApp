@@ -1,7 +1,12 @@
 package br.com.sdvs.app.controller;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Optional;
 
+import br.com.sdvs.app.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +26,15 @@ public class ProfileRestController {
 
     @Autowired
     private ProfileRepository repository;
+
+    @Autowired
+    private ProfileService service;
+
+    @GetMapping(value = "/import")
+    public ResponseEntity setFakeData(){
+        String result = service.setFakeData();
+        return new ResponseEntity(result, HttpStatus.CREATED);
+    }
 
     @GetMapping(value = "/search")
     public ResponseEntity<Page<Profile>> search(
