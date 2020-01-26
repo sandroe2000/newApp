@@ -1,1 +1,7 @@
-target
+/.mvn
+/.settings
+/.vscode
+/.target
+/.classpath
+/.project
+/.factorypath
