@@ -1,0 +1,5 @@
+br/com/sdvs/app/model/Profile.class
+br/com/sdvs/app/controller/ProfileRestController.class
+br/com/sdvs/app/Application.class
+br/com/sdvs/app/repository/ProfileRepository.class
+br/com/sdvs/app/service/ProfileService.class
