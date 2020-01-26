@@ -24,6 +24,7 @@ public class Profile implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    
     private String cpf;
     private String name;
     private String imgProfile1;

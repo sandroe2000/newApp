@@ -9,7 +9,6 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,7 +24,7 @@ public class ProfileService {
     public String setFakeData() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String csvFile = "/sdvs-workspaces/newApp/201909_PEP.csv";
+        String csvFile = "/home/sandro/DEV/newApp/201909_PEP.csv";
         String result = "OK";
 
         try {
@@ -68,7 +67,7 @@ public class ProfileService {
         List<String> result = new ArrayList<>();
 
         //if empty, return!
-        if (cvsLine == null && cvsLine.isEmpty()) {
+        if (cvsLine.isEmpty()) {
             return result;
         }
 

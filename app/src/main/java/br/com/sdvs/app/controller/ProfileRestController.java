@@ -1,9 +1,5 @@
 package br.com.sdvs.app.controller;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Optional;
 
 import br.com.sdvs.app.service.ProfileService;
@@ -31,9 +27,9 @@ public class ProfileRestController {
     private ProfileService service;
 
     @GetMapping(value = "/import")
-    public ResponseEntity setFakeData(){
+    public ResponseEntity<String> setFakeData(){
         String result = service.setFakeData();
-        return new ResponseEntity(result, HttpStatus.CREATED);
+        return new ResponseEntity<String>(result, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/search")
