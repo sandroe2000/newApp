@@ -28,6 +28,7 @@ public class ProfileRestController {
 
     @GetMapping(value = "/import")
     public ResponseEntity<String> setFakeData(){
+
         String result = service.setFakeData();
         return new ResponseEntity<String>(result, HttpStatus.CREATED);
     }

@@ -2,22 +2,19 @@
 spring:
   application:
     name: Application
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:db;MODE=MySQL;IGNORECASE=TRUE
+    username: wweaver
+    password: Inn*v@01
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wweaver?useSSL=false
   jpa:
     #show-sql: true
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   servlet: 
     multipart: 
       max-file-size: 5
