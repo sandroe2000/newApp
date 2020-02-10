@@ -1,53 +1,91 @@
 package br.com.sdvs.app.service;
 
-import br.com.sdvs.app.model.Profile;
-import br.com.sdvs.app.repository.ProfileRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import br.com.sdvs.app.model.Profile;
+import br.com.sdvs.app.repository.ProfileRepository;
+
 @Service
 public class ProfileService {
+
+    Logger logger = LoggerFactory.getLogger(ProfileService.class);
 
     @Autowired
     private ProfileRepository repository;
 
-    private static final char DEFAULT_SEPARATOR = ';';
+    private static final char DEFAULT_SEPARATOR = '|';
     private static final char DEFAULT_QUOTE = '"';
+
+    @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
+    private int batchSize;
 
     public String setFakeData() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String csvFile = "/home/sandro/DEV/newApp/201909_PEP.csv";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String fileName = "/home/sandro/DEV/newApp/data/Bkp_Usu_2019-05-30_04-00-03";
         String result = "OK";
-
+        int i = 0;
+        
         try {
-            Scanner scanner = new Scanner(new File(csvFile));
+            InputStream inputStream = new FileInputStream(fileName);
+            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
+
 
             List<Profile> listProfiles = new ArrayList<Profile>();
 
             while (scanner.hasNext()) {
                 List<String> line = parseLine(scanner.nextLine());
-                LocalDate birthDate = LocalDate.parse(line.get(6), formatter);
+
+                if(line.size()<55){
+                    continue;
+                }
+
                 Profile profile = new Profile();
-                profile.setCpf(line.get(0));
-                profile.setName(line.get(1));
+
+                LocalDate birthDate = LocalDate.parse(line.get(6).trim(), formatter);
+
+                profile.setCpf(line.get(26).trim());
+                profile.setCard(line.get(3).trim());
+                profile.setName(line.get(4).trim());
+                profile.setGerder(line.get(5).trim());
                 profile.setImgProfile1("/img/avatar/no-image.jpg");
                 profile.setBirthDate(birthDate);
 
+                if(line.get(51).trim().length()>0 && !line.get(51).trim().equals("00")){
+                    profile.setContactPhone("("+line.get(51).trim()+") "+ line.get(52).trim());
+                }
+
                 listProfiles.add(profile);
+
+                if (i % batchSize == 0 && i > 0) {
+                    repository.saveAll(listProfiles);
+                    //logger.info("registros lidos: "+i);
+                    listProfiles.clear();
+                }
+
+                i++;
             }
 
-            repository.saveAll(listProfiles);
+            if (listProfiles.size() > 0) {
+                repository.saveAll(listProfiles);
+                listProfiles.clear();
+            }
 
             scanner.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             result = "FAIL";
         }
 
@@ -66,7 +104,7 @@ public class ProfileService {
 
         List<String> result = new ArrayList<>();
 
-        //if empty, return!
+        // if empty, return!
         if (cvsLine.isEmpty()) {
             return result;
         }
@@ -95,7 +133,7 @@ public class ProfileService {
                     doubleQuotesInColumn = false;
                 } else {
 
-                    //Fixed : allow "" in custom quote enclosed
+                    // Fixed : allow "" in custom quote enclosed
                     if (ch == '\"') {
                         if (!doubleQuotesInColumn) {
                             curVal.append(ch);
@@ -111,12 +149,12 @@ public class ProfileService {
 
                     inQuotes = true;
 
-                    //Fixed : allow "" in empty quote enclosed
+                    // Fixed : allow "" in empty quote enclosed
                     if (chars[0] != '"' && customQuote == '\"') {
                         curVal.append('"');
                     }
 
-                    //double quotes in column will hit this!
+                    // double quotes in column will hit this!
                     if (startCollectChar) {
                         curVal.append('"');
                     }
@@ -129,10 +167,10 @@ public class ProfileService {
                     startCollectChar = false;
 
                 } else if (ch == '\r') {
-                    //ignore LF characters
+                    // ignore LF characters
                     continue;
                 } else if (ch == '\n') {
-                    //the end, break!
+                    // the end, break!
                     break;
                 } else {
                     curVal.append(ch);

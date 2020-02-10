@@ -9,6 +9,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 @SpringBootApplication
 public class Application {
 
+	//java -jar -Xms4096M -Xmx6144M -XX:NewRatio=1 -XX:-UseAdaptiveSizePolicy app-0.0.1-SNAPSHOT.jar
+
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
 	}

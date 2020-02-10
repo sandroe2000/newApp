@@ -26,7 +26,9 @@ public class Profile implements Serializable {
     private Long id;
     
     private String cpf;
+    private String card;
     private String name;
+    private String gerder;
     private String imgProfile1;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt-BR", timezone = "Brazil/East")
