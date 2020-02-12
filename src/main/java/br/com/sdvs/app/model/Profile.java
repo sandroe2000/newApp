@@ -43,37 +43,37 @@ public class Profile implements Serializable {
 
     @ElementCollection
     @CollectionTable(name ="disabled")
-    private List<String> disabled = new ArrayList<String>();
+    private List<String> disabled = new ArrayList<>();
     
     @ElementCollection
     @CollectionTable(name ="password_reset_verif")
-    private List<String> passwordResetVerif = new ArrayList<String>();
+    private List<String> passwordResetVerif = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="communication")
-    private List<String> communication = new ArrayList<String>();
+    private List<String> communication = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="group_participant")
-    private List<String> groupParticipant = new ArrayList<String>();
+    private List<String> groupParticipant = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="access_settings")
-    private List<String> accessSettings = new ArrayList<String>();
+    private List<String> accessSettings = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="account_settings")
-    private List<String> accountSettings = new ArrayList<String>();
+    private List<String> accountSettings = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="change_password")
-    private List<String> changePassword = new ArrayList<String>();
+    private List<String> changePassword = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="list_of_profiles")
-    private List<String> listOfProfiles = new ArrayList<String>();
+    private List<String> listOfProfiles = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name ="personal_information")
-    private List<String> personalInformation = new ArrayList<String>();
+    private List<String> personalInformation = new ArrayList<>();
 }

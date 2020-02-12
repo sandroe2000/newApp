@@ -5,7 +5,7 @@ spring:
   datasource:
     username: wweaver
     password: Inn*v@01
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wweaver?useSSL=false
   jpa:
     #show-sql: true
@@ -13,13 +13,13 @@ spring:
       hibernate:
         cache:
           use_second_level_cache: false 
-        generate_statistics: true 
+        #generate_statistics: true 
         jdbc:
-          batch_size: 10000 
+          batch_size: 1000
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   servlet: 
     multipart: 
       max-file-size: 5
@@ -32,3 +32,5 @@ logging:
     file: "%d %-5level [%thread] %logger : %msg%n"
   level:
     br.com.sdvs.builder: INFO
+
+import_file: /home/sandro/DEV/newApp/data/data.csv
