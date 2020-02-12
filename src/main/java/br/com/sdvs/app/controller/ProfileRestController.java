@@ -39,8 +39,7 @@ public class ProfileRestController {
     @GetMapping(value = "/import")
     public ResponseEntity<String> setFakeData(){
 
-        String result = service.setFakeData();
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(service.setFakeData(), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/search")
@@ -51,9 +50,9 @@ public class ProfileRestController {
 
         Page<Profile> page = null;
 
-        if(name.isEmpty() && groupParticipant.isEmpty()){
+        if(name.equals("") && groupParticipant.equals("")){
             page = repository.findAll(pageable);
-        }else if(!name.isEmpty() && groupParticipant.isEmpty()){
+        }else if(!name.equals("") && groupParticipant.equals("")){
             page = repository.findAllByNameContaining(name, pageable);
         }else{
             page = repository.findAllByNameContainingByGroupParticipant("%"+name+"%", groupParticipant, pageable);
@@ -64,54 +63,63 @@ public class ProfileRestController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<Profile>> findById(@PathVariable("id") Long id){
+
         Optional<Profile> entity = repository.findById(id);
         HttpStatus returnStatus = HttpStatus.OK;
+
         if (!entity.isPresent()) {
             returnStatus = HttpStatus.NO_CONTENT;
         }
+
         return new ResponseEntity<>(entity, returnStatus);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Profile> create(@RequestBody ProfileDto dto){
+
         Profile currentEntity = repository.findByCpf(dto.getCpf());
+
         if (currentEntity!=null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }else{
-
-            ModelMapper modelMapper = new ModelMapper();
-            Profile persistentProfile = new Profile();
-            modelMapper.map(dto, persistentProfile);
-
-            repository.save(persistentProfile);
-            return new ResponseEntity<>(persistentProfile, HttpStatus.CREATED);
         }
+
+        ModelMapper modelMapper = new ModelMapper();
+        Profile persistentProfile = new Profile();
+        modelMapper.map(dto, persistentProfile);
+
+        repository.save(persistentProfile);
+        return new ResponseEntity<>(persistentProfile, HttpStatus.CREATED);
+
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Profile> update(@PathVariable("id") Long id, @RequestBody ProfileDto dto) {
+
         Optional<Profile> currentEntity = repository.findById(id);
+
         if (!currentEntity.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
-
-            ModelMapper modelMapper = new ModelMapper();
-            Profile persistentProfile = new Profile();
-            modelMapper.map(dto, persistentProfile);
-
-            repository.save(persistentProfile);
-            return new ResponseEntity<>(persistentProfile, HttpStatus.OK);
         }
+
+        ModelMapper modelMapper = new ModelMapper();
+        Profile persistentProfile = new Profile();
+        modelMapper.map(dto, persistentProfile);
+        repository.save(persistentProfile);
+
+        return new ResponseEntity<>(persistentProfile, HttpStatus.OK);
     }
     
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Profile> delete(@PathVariable("id") Long id) {
+
         Optional<Profile> currentEntity = repository.findById(id);
+
         if (!currentEntity.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
-            repository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
+
+        repository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 }
