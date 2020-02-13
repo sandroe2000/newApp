@@ -1,6 +1,7 @@
 package br.com.sdvs.app.service;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -10,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,10 +29,9 @@ public class ProfileService {
     @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
     private int batchSize;
 
-    @Value("${import_file}")
-    private String fileName;
+    private static Logger logger = LoggerFactory.getLogger(ProfileService.class);
 
-    public String setFakeData() {
+    public String setFakeData(String fileName) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String result = "OK";
@@ -38,7 +40,7 @@ public class ProfileService {
         Scanner scanner = null;
         
         try (InputStream inputStream = new FileInputStream(fileName)){
-            
+
             scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
 
 
@@ -81,11 +83,14 @@ public class ProfileService {
                 repository.saveAll(listProfiles);
                 listProfiles.clear();
             }
-            
-        } catch (Exception e) {
+
+        } catch (IOException e) {
             result = "FAIL";
+            logger.error("Error log message", e);
         } finally {
-            scanner.close();
+            if(scanner != null) {
+                scanner.close();
+            }
         }
 
         return result;

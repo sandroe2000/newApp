@@ -11,7 +11,11 @@ public class Application {
 
 	/*
 	java -jar -Xms4096M -Xmx6144M -XX:NewRatio=1 -XX:-UseAdaptiveSizePolicy app-0.0.1-SNAPSHOT.jar
-	
+
+	/opt/sonarqube/bin/linux-x86-64/sonar.sh console
+
+	mvn compile
+
 	mvn sonar:sonar \
   	-Dsonar.projectKey=newApp \
   	-Dsonar.host.url=http://localhost:9000 \

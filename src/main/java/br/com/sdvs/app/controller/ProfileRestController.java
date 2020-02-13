@@ -1,7 +1,6 @@
 package br.com.sdvs.app.controller;
 
 import java.util.Optional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import br.com.sdvs.app.dto.ProfileDto;
 import br.com.sdvs.app.model.Profile;
 import br.com.sdvs.app.repository.ProfileRepository;
@@ -37,9 +35,16 @@ public class ProfileRestController {
     private ProfileService service;
 
     @GetMapping(value = "/import")
-    public ResponseEntity<String> setFakeData(){
+    public ResponseEntity<String> setFakeData(@PathVariable("filePath") String filePath) {
 
-        return new ResponseEntity<>(service.setFakeData(), HttpStatus.CREATED);
+        String result = service.setFakeData(filePath);
+
+        if(result.equals("FAIL")){
+
+            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/search")
