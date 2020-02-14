@@ -35,7 +35,7 @@ public class ProfileRestController {
     private ProfileService service;
 
     @GetMapping(value = "/import")
-    public ResponseEntity<String> setFakeData(@PathVariable("filePath") String filePath) {
+    public ResponseEntity<String> setFakeData(@RequestParam("filePath") String filePath) {
 
         String result = service.setFakeData(filePath);
 
@@ -53,16 +53,7 @@ public class ProfileRestController {
             @RequestParam("groupParticipant") String groupParticipant,
             @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
 
-        Page<Profile> page = null;
-
-        if(name.equals("") && groupParticipant.equals("")){
-            page = repository.findAll(pageable);
-        }else if(!name.equals("") && groupParticipant.equals("")){
-            page = repository.findAllByNameContaining(name, pageable);
-        }else{
-            page = repository.findAllByNameContainingByGroupParticipant("%"+name+"%", groupParticipant, pageable);
-        }
-
+        Page<Profile> page = service.findAll(name, groupParticipant, pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 

@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.sdvs.app.model.Profile;
@@ -43,7 +45,6 @@ public class ProfileService {
 
             scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
 
-
             List<Profile> listProfiles = new ArrayList<>();
 
             while (scanner.hasNext()) {
@@ -64,10 +65,7 @@ public class ProfileService {
                 profile.setGerder(line.get(5).trim());
                 profile.setImgProfile1("/img/avatar/no-image.jpg");
                 profile.setBirthDate(birthDate);
-
-                if(line.get(51).trim().length()>0 && !line.get(51).trim().equals("00")){
-                    profile.setContactPhone("("+line.get(51).trim()+") "+ line.get(52).trim());
-                }
+                profile.setContactPhone("("+line.get(51).trim()+") "+ line.get(52).trim());
 
                 listProfiles.add(profile);
 
@@ -93,6 +91,35 @@ public class ProfileService {
             }
         }
 
+        return result;
+    }
+
+    public Page<Profile> findAll(String name, String groupParticipant, Pageable pageable){
+
+        Page<Profile> page = null;
+
+        if(isNullOrEmpty(name) && isNullOrEmpty(groupParticipant)){
+            page = repository.findAll(pageable);
+        }
+
+        if(!isNullOrEmpty(name) && isNullOrEmpty(groupParticipant)){
+            page = repository.findAllByNameContaining(name, pageable);
+        }
+
+        if(!isNullOrEmpty(name) && !isNullOrEmpty(groupParticipant)){
+            page = repository.findAllByNameContainingByGroupParticipant("%"+name+"%", groupParticipant, pageable);
+        }
+
+        return page;
+    }
+
+    public boolean isNullOrEmpty(String str) {
+
+        boolean result = true;
+
+        if(null != str && !str.isEmpty()){
+            result = false;
+        }
         return result;
     }
 }

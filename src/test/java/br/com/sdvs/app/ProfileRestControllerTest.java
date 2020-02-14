@@ -62,7 +62,7 @@ public class ProfileRestControllerTest {
     @Order(3)
     public void whenSearch_withOutNameAndGroupParticipant() throws Exception {
 
-        ResponseEntity<Page<Profile>> request = profileRestController.search(new String(), new String(), pageable);
+        ResponseEntity<Page<Profile>> request = profileRestController.search("", "", pageable);
         Assertions.assertEquals(HttpStatus.OK, request.getStatusCode());
     }
 
@@ -70,7 +70,7 @@ public class ProfileRestControllerTest {
     @Order(4)
     public void whenSearch_withOutGroupParticipant() throws Exception {
 
-        ResponseEntity<Page<Profile>> request = profileRestController.search("MARIA", new String(), pageable);
+        ResponseEntity<Page<Profile>> request = profileRestController.search("MARIA", "", pageable);
         Assertions.assertEquals(HttpStatus.OK, request.getStatusCode());
     }
 
@@ -181,5 +181,11 @@ public class ProfileRestControllerTest {
 
         ResponseEntity<Profile> request = profileRestController.delete(0L);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, request.getStatusCode());
+    }
+
+    @Test
+    @Order(14)
+    public void main() {
+        Application.main(new String[] {});
     }
 }
