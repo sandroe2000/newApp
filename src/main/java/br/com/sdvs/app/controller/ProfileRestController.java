@@ -49,8 +49,8 @@ public class ProfileRestController {
 
     @GetMapping(value = "/search")
     public ResponseEntity<Page<Profile>> search(
-            @RequestParam("name") String name,
-            @RequestParam("groupParticipant") String groupParticipant,
+            @RequestParam(required=false) String name,
+            @RequestParam(required=false) String groupParticipant,
             @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
 
         Page<Profile> page = service.findAll(name, groupParticipant, pageable);
