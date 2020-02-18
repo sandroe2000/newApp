@@ -3,6 +3,7 @@ package br.com.sdvs.app;
 import br.com.sdvs.app.controller.ProfileRestController;
 import br.com.sdvs.app.dto.ProfileDto;
 import br.com.sdvs.app.model.Profile;
+import br.com.sdvs.app.service.ProfileService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProfileRestControllerTest {
@@ -32,6 +34,9 @@ public class ProfileRestControllerTest {
 
     @Autowired
     private ProfileRestController profileRestController;
+
+    @Autowired
+    private ProfileService profileService;
 
     private Pageable pageable = PageRequest.of(0, 5);
 
@@ -186,6 +191,8 @@ public class ProfileRestControllerTest {
     @Test
     @Order(14)
     public void main() {
+
         Application.main(new String[] {});
+        Assertions.assertNotEquals(null, profileRestController);
     }
 }
